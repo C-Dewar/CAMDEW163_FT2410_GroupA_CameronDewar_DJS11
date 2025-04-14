@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useAudioStore } from '@store/useAudioStore';
+import AudioPlayer from '@components/AudioPlayer/AudioPlayer';
 
 interface Episode {
-  id: number;
+  episode: number;
   title: string;
+  description: string;
   file: string;
+  listenCount: number;
 }
 
 interface Season {
@@ -28,6 +32,9 @@ const ShowDetails = () => {
   const [loading, setLoading] = useState(true);
   const [selectedSeason, setSelectedSeason] = useState<number>(0);
 
+  //Access the setCurrentEpisode function from the store
+  const { setCurrentEpisode, setProgress, episodeProgress } = useAudioStore();
+
   useEffect(() => {
     const fetchShow = async () => {
       try {
@@ -42,6 +49,24 @@ const ShowDetails = () => {
     fetchShow();
   }, [id]);
 
+  const handleEpisodeClick = (episode: Episode) => {
+    console.log('Selected Episode:', episode);
+    const episodeId = episode.episode;
+    if (typeof episodeId !== 'number') {
+      console.error('Episode ID is missing or invalid', episode);
+    }
+    //Setting the clicked episode as the current episode within the store
+    setCurrentEpisode({
+      id: episodeId,
+      title: episode.title,
+      description: episode.description,
+      file: episode.file,
+      listenCount: 0,
+      isFinished: false,
+    });
+    setProgress(episodeId, 0);
+  };
+
   if (loading || !show) return <div>Loading show...</div>;
 
   return (
@@ -54,7 +79,10 @@ const ShowDetails = () => {
       <h2>Seasons</h2>
       <div>
         {show.seasons.map((season, index) => (
-          <button key={season.id} onClick={() => setSelectedSeason(index)}>
+          <button
+            key={`{season.id}-${index}`}
+            onClick={() => setSelectedSeason(index)}
+          >
             {season.title}
           </button>
         ))}
@@ -72,13 +100,15 @@ const ShowDetails = () => {
 
         <ul>
           {show.seasons[selectedSeason].episodes.map((ep) => (
-            <li key={ep.id}>
+            <li key={ep.episode}>
               <p>{ep.title}</p>
-              <audio controls src={ep.file} />
+              <button onClick={() => handleEpisodeClick(ep)}>Play</button>
+              <p>Progress: {Math.floor(episodeProgress[ep.episode] || 0)}s</p>
             </li>
           ))}
         </ul>
       </div>
+      <AudioPlayer />
     </div>
   );
 };

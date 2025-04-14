@@ -1,0 +1,26 @@
+.audioPlayerWrapper {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #1a202c; /* Use appropriate bg color from your theme */
+  color: white;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 50;
+}
+
+.audioPlayerTitleWrapper {
+  margin-bottom: 10px;
+}
+
+.audioPlayerTitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.audioPlayerProgress {
+  font-size: 1rem;
+  margin-top: 10px;
+}

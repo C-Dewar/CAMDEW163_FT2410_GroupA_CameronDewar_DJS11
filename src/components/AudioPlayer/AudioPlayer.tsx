@@ -1,11 +1,10 @@
-import { useEffect, useState, useCallback } from 'react';
-import { useAudioStore } from '@store/useAudioStore';
+import {useEffect, useCallback} from 'react';
+import {useAudioStore} from '@store/useAudioStore';
 import styles from '@styles/audioPlayer.module.css';
 
 const AudioPlayer = () => {
   const {
     currentEpisode,
-    episodeProgress,
     setIsPlaying,
     setCurrentEpisode,
     addEpisodeToFavorites,
@@ -13,31 +12,34 @@ const AudioPlayer = () => {
     audioRef,
     setProgress,
   } = useAudioStore();
-  const [isPlaying, setIsPlayingState] = useState(false);
+
+  const {isPlaying} = useAudioStore();
 
   //Function to handle the time update
   const handleTimeUpdate = () => {
     if (audioRef.current && currentEpisode) {
       const currentTime = audioRef.current.currentTime;
-      setProgress(currentEpisode.id, currentTime); //Update the global progress within the audioStore
+      setProgress(currentEpisode.id, currentTime); // Update the global progress in the store
     }
   };
+
+
   //Function to handle play/pause state tracking
   const handlePlayPause = (isPlaying: boolean) => {
-    setIsPlaying(isPlaying);
-    setIsPlayingState(isPlaying);
+    setIsPlaying(isPlaying); // Sync play/pause state with the store
   };
 
   //Function to handle audio end for favorites tracking/recording
   const handleEnd = () => {
     if (audioRef.current && currentEpisode) {
       //Mark the episode as finished/listened to
-      setCurrentEpisode({ ...currentEpisode, isFinished: true });
+      setCurrentEpisode({...currentEpisode, isFinished: true});
       addEpisodeToFavorites(currentEpisode.id.toString()); //Add episode i.d. to favorites
       incrementListenCount(currentEpisode.id); //Adds 1 to the listen count to show it's been listened to in its entirety
       setProgress(currentEpisode.id, 0); //Resets the progress as the listen count shows if it's been completed
     }
   };
+
   // Handler to prevent episode unloading/quitting midway through an episode
   const beforeQuit = useCallback(
     (e: BeforeUnloadEvent) => {
@@ -66,15 +68,12 @@ const AudioPlayer = () => {
         ref={audioRef}
         src={currentEpisode.file}
         controls
-        autoPlay
         onPlay={() => handlePlayPause(true)}
         onPause={() => handlePlayPause(false)}
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleEnd}
+        className={styles.audioPlayer}
       />
-      <div className={styles.audioPlayerProgress}>
-        {Math.floor(episodeProgress[currentEpisode.id] || 0)}s
-      </div>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Preview } from '../../types/preview';
+import { Preview } from '@/types/preview.ts';
 import { formatDistanceToNow } from 'date-fns';
 import { Link } from 'react-router-dom';
 
@@ -39,7 +39,7 @@ const ShowCard: React.FC<Props> = ({ show }) => {
             : 'No genres available'}
         </p>
         <p>
-          <strong>Updated:</strong>
+          <strong>Updated: </strong>
           {formatDistanceToNow(new Date(show.updated), { addSuffix: true })}
         </p>
       </div>

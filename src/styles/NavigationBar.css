@@ -1,0 +1,121 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  background-color: #333;
+  color: white;
+  width: 100%;
+  z-index: 1000;
+  padding: 10px;
+}
+
+/* Burger Menu styles */
+#burger-menu {
+  cursor: pointer;
+  height: 27px;
+  width: 27px;
+  margin: 20px;
+  top: 20px;
+  right: 20px;
+  overflow: visible;
+  position: fixed;
+  z-index: 999;
+}
+
+#burger-menu span,
+#burger-menu span:before,
+#burger-menu span:after {
+  background: #fff;
+  display: block;
+  height: 2px;
+  opacity: 1;
+  position: absolute;
+  transition: 0.3s ease-in-out;
+}
+
+#burger-menu span:before,
+#burger-menu span:after {
+  content: '';
+}
+
+#burger-menu span:before {
+  left: 0px;
+  top: -10px;
+  width: 27px;
+}
+
+#burger-menu span {
+  right: 0px;
+  top: 13px;
+  width: 27px;
+}
+
+#burger-menu span:after {
+  left: 0px;
+  top: 10px;
+  width: 27px;
+}
+
+/* Rotation on click (open menu) */
+#burger-menu.close span:before {
+  top: 0px;
+  transform: rotate(90deg);
+  width: 27px;
+}
+
+#burger-menu.close span {
+  transform: rotate(-45deg);
+  top: 13px;
+  width: 27px;
+}
+
+#burger-menu.close span:after {
+  top: 0px;
+  left: 0;
+  transform: rotate(90deg);
+  opacity: 0;
+  width: 0;
+}
+
+/* Menu styles */
+#menu {
+  z-index: 1;
+  min-width: 100%;
+  min-height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 0;
+  visibility: hidden;
+  opacity: 0;
+  text-align: center;
+  padding-top: 20px;
+  transition: all 0.3s ease-in-out;
+}
+
+#menu.overlay {
+  visibility: visible;
+  opacity: 1;
+  padding-top: 100px;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+#menu ul {
+  padding: 0;
+}
+
+#menu li {
+  list-style: none;
+}
+
+#menu a {
+  color: #fff;
+  display: block;
+  font-size: 32px;
+  margin-bottom: 30px;
+  text-decoration: none;
+}
+
+/* Optional: Add transition effect for smoother appearance */
+#menu {
+  transition: all 0.3s ease-in-out;
+}

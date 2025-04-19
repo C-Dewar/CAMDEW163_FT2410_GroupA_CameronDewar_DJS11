@@ -1,26 +1,50 @@
 .audioPlayerWrapper {
-  position: fixed;
+  position: fixed; /* Fixed position to keep it at the bottom */
   bottom: 0;
-  width: 100%;
-  background-color: #1a202c; /* Use appropriate bg color from your theme */
-  color: white;
-  padding: 16px;
+  left: 0;
+  right: 0;
+  background-color: rgb(60, 60, 60); /* White background for contrast */
+  padding: 12px 16px;
+  border-top: 1px solid rgba(61, 61, 61, 0.42); /* Adds a subtle border to separate it */
+  box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for some depth */
+  z-index: 9999; /* Ensures it stays on top of other content */
+}
+
+
+.audioPlayerTitleWrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 50;
-}
-
-.audioPlayerTitleWrapper {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .audioPlayerTitle {
-  font-size: 1.5rem;
+  font-size: 1.1em;
   font-weight: bold;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Handles long titles by truncating with ellipsis */
+  white-space: nowrap; /* Prevents wrapping of the title */
+}
+
+.audioPlayer {
+  width: 100%; /* Ensures the player stretches to full width */
+  margin-top: 8px;
 }
 
 .audioPlayerProgress {
-  font-size: 1rem;
-  margin-top: 10px;
+  font-size: 0.9em;
+  color: #666;
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* Optional: If you want to add a smooth transition when the player appears/disappears */
+.audioPlayerWrapper {
+  transition: transform 0.3s ease-in-out;
+}
+
+/* If you have other content that may be pushed up by this player */
+body {
+  padding-bottom: 60px; /* Adds extra space at the bottom to prevent overlap */
 }

@@ -12,7 +12,7 @@ interface Episode {
 
 interface AudioStore {
   currentEpisode: Episode | null;
-  episodeProgress: Record<number, number>; //Progress tracked per episode
+  episodeProgress: Record<number, { progress: number; isFinished: boolean }>; // Track progress and finished status
   isPlaying: boolean;
   favorites: string[];
   audioRef: React.RefObject<HTMLAudioElement | null>;
@@ -33,18 +33,29 @@ export const useAudioStore = create<AudioStore>((set) => ({
   favorites: [], //Empty array/list initially prior to anything being played to completion
   audioRef: React.createRef(),
 
-  setCurrentEpisode: (episode: Episode) => set({ currentEpisode: episode }),
+  setCurrentEpisode: (episode: Episode) =>
+    set((state) => ({
+      currentEpisode: episode,
+      episodeProgress: {
+        ...state.episodeProgress,
+        [episode.id]: { progress: 0, isFinished: episode.isFinished }, // Initialize progress and finished status
+      },
+    })),
+
   setProgress: (episodeId: number, progress: number) =>
     set((state) => ({
       episodeProgress: {
         ...state.episodeProgress,
-        [episodeId]: progress, //Update for a specific episode
+        [episodeId]: {
+          progress, // Update progress
+          isFinished: state.episodeProgress[episodeId]?.isFinished || false, // Preserve finished status
+        },
       },
     })),
+
   setIsPlaying: (isPlaying: boolean) => set({ isPlaying }),
 
   //Action to add the episode to favorites list
-
   addEpisodeToFavorites: (episodeId: string) => {
     set((state) => {
       //Logic to avoid adding duplicates
@@ -54,14 +65,25 @@ export const useAudioStore = create<AudioStore>((set) => ({
       return state;
     });
   },
+
   resetProgress: () => set({ episodeProgress: {} }),
+
   incrementListenCount: (episodeId: number) => {
     set((state) => {
-      if (state.currentEpisode && state.currentEpisode.id === episodeId) {
+      const episode = state.currentEpisode;
+      if (episode && episode.id === episodeId) {
+        console.log('Before increment, listen count:', episode.listenCount);
         return {
           currentEpisode: {
-            ...state.currentEpisode,
-            listenCount: state.currentEpisode.listenCount + 1,
+            ...episode,
+            listenCount: episode.listenCount + 1,
+          },
+          episodeProgress: {
+            ...state.episodeProgress,
+            [episodeId]: {
+              progress: 0, // Reset progress after increment
+              isFinished: true, // Mark as finished
+            },
           },
         };
       }

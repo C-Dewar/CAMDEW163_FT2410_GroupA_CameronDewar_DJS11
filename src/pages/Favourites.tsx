@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFavouritesStore } from '@store/useFavouritesStore';
 import styles from '@styles/Favourites.module.css'; // Import the CSS module
 

@@ -19,7 +19,7 @@ const AudioPlayer = () => {
   const handleTimeUpdate = () => {
     if (audioRef.current && currentEpisode) {
       const currentTime = audioRef.current.currentTime;
-      setProgress(currentEpisode.id, currentTime); // Update the global progress in the store
+      setProgress(currentEpisode.episode, currentTime); // Update the global progress in the store
     }
   };
 
@@ -34,9 +34,9 @@ const AudioPlayer = () => {
     if (audioRef.current && currentEpisode) {
       //Mark the episode as finished/listened to
       setCurrentEpisode({...currentEpisode, isFinished: true});
-      addEpisodeToFavorites(currentEpisode.id.toString()); //Add episode i.d. to favorites
-      incrementListenCount(currentEpisode.id); //Adds 1 to the listen count to show it's been listened to in its entirety
-      setProgress(currentEpisode.id, 0); //Resets the progress as the listen count shows if it's been completed
+      addEpisodeToFavorites(currentEpisode.episode); //Add episode ID to favorites
+      incrementListenCount(currentEpisode.episode); //Adds 1 to the listen count to show it's been listened to in its entirety
+      setProgress(currentEpisode.episode, 0); //Resets the progress as the listen count shows if it's been completed
     }
   };
 

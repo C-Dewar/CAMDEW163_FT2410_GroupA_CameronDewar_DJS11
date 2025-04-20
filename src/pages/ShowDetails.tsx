@@ -1,63 +1,49 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useAudioStore } from '@store/useAudioStore';
+import {useEffect, useState} from 'react';
+import {useParams, useNavigate} from 'react-router-dom';
+import {useAudioStore} from '@store/useAudioStore';
 import AudioPlayer from '@components/AudioPlayer/AudioPlayer';
-import { useFavouritesStore } from '@store/useFavouritesStore';
-
-interface Episode {
-  episode: number;
-  title: string;
-  description: string;
-  file: string;
-  listenCount: number;
-  isFinished: boolean;
-}
-
-interface Season {
-  id: number;
-  title: string;
-  image: string;
-  episodes: Episode[];
-}
-
-export interface Show {
-  id: number;
-  title: string;
-  description: string;
-  seasons: Season[];
-}
+import {useFavouritesStore} from '@store/useFavouritesStore';
+import {Show} from "@/types/show";
+import {Episode} from "@/types/episode";
+import {Season} from "@/types/season";
+import {fetchShowDetails} from "@/APIFunctions/api.tsx";
 
 const ShowDetails = () => {
-  const { id } = useParams();
+  const {id} = useParams();
   const navigate = useNavigate();
   const [show, setShow] = useState<Show | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedSeason, setSelectedSeason] = useState<number>(0);
 
   // Access the setCurrentEpisode function and audioRef from the store
-  const { setCurrentEpisode, episodeProgress, audioRef, setIsPlaying } =
-    useAudioStore();
+  const {
+    setCurrentEpisode,
+    episodeProgress,
+    episodeListenCount,
+    audioRef,
+    setIsPlaying
+  } = useAudioStore();
 
   // Get addToFavourites from the store
-  const { addToFavourites, removeFromFavourites, favourites } =
-    useFavouritesStore(); // Access the store
+  const {
+    addToFavourites,
+    removeFromFavourites,
+    favourites
+  } = useFavouritesStore(); // Access the store
 
   useEffect(() => {
-    const fetchShow = async () => {
+    const fetchData = async () => {
       try {
-        const res = await fetch(`https://podcast-api.netlify.app/id/${id}`);
-        if (!res.ok) {
-          throw new Error('Show not found');
-        }
-        // Check if the response is ok
-        const data = await res.json();
-        setShow(data);
-        setLoading(false);
+        const fetchedShow = await fetchShowDetails(id!);
+        setShow(fetchedShow);
       } catch (error) {
-        console.error('Failed to fetch show:', error);
+        console.error('Error fetching show details:', error);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchShow();
+
+    fetchData();
   }, [id]);
 
   const handleEpisodeClick = (episode: Episode) => {
@@ -70,7 +56,7 @@ const ShowDetails = () => {
 
     // Set the clicked episode as the current episode
     setCurrentEpisode({
-      id: episodeId,
+      episode: episodeId,
       title: episode.title,
       description: episode.description,
       file: episode.file,
@@ -124,14 +110,23 @@ const ShowDetails = () => {
   };
 
   const getUniqueId = (show: Show, season: Season, episode: Episode) => {
-    return show.id + '-' + season.id + '-' + episode.episode;
+    return show.id + '-' + season.season + '-' + episode.episode;
   };
 
-  if (loading || !show)
-    return <div style={{ padding: 24 }}>Loading show...</div>;
+  if (loading) return <div style={{padding: 24}}>Loading show...</div>;
+
+  if (!show) {
+    return <div style={{padding: 24}}>Failed to load show details.</div>;
+  }
+
+  if (!show.seasons || show.seasons.length === 0) {
+    return <div style={{padding: 24}}>No seasons available for this show.</div>;
+  }
+
+  const episodes = show.seasons[selectedSeason]?.episodes || [];
 
   return (
-    <div style={{ padding: 24 }}>
+    <div style={{padding: 24}}>
       <button onClick={() => navigate(-1)}>&larr; Back</button>
 
       <h1> {show.title}</h1>
@@ -141,10 +136,10 @@ const ShowDetails = () => {
       <div>
         {show.seasons.map((season, index) => (
           <button
-            key={`{season.id}-${index}`}
+            key={season.season}
             onClick={() => setSelectedSeason(index)}
             style={{
-              marginLeft: index > 0 ? 12 : 0, // Add left margin for all buttons except the first
+              marginLeft: index > 0 ? 12 : 0,
             }}
           >
             {season.title}
@@ -166,8 +161,8 @@ const ShowDetails = () => {
           {show.seasons[selectedSeason].episodes.length}
         </p>
 
-        <ul style={{ padding: 0, listStyle: 'none' }}>
-          {show.seasons[selectedSeason].episodes.map((episode) => (
+        <ul style={{padding: 0, listStyle: 'none'}}>
+          {episodes.map((episode) => (
             <li
               key={episode.episode}
               style={{
@@ -177,13 +172,13 @@ const ShowDetails = () => {
                 borderRadius: '4px',
               }}
             >
-              <p style={{ margin: 0, fontWeight: 'bold' }}>
+              <p style={{margin: 0, fontWeight: 'bold'}}>
                 {episode.title}
                 {episodeProgress[episode.episode]?.isFinished && (
-                  <span style={{ color: 'green' }}> - Finished</span>
+                  <span style={{color: 'green'}}> - Finished</span>
                 )}
               </p>
-              <div style={{ marginTop: '8px' }}>
+              <div style={{marginTop: '8px'}}>
                 <button
                   onClick={() => handleEpisodeClick(episode)}
                   style={{
@@ -237,8 +232,8 @@ const ShowDetails = () => {
                 <p>
                   {' '}
                   Listen Count:{' '}
-                  {episode.listenCount > 0
-                    ? `${episode.listenCount} times`
+                  {episodeListenCount[episode.episode]?.listenCount > 0
+                    ? `${episodeListenCount[episode.episode]?.listenCount} times`
                     : 0}{' '}
                 </p>
               </div>
@@ -246,7 +241,7 @@ const ShowDetails = () => {
           ))}
         </ul>
       </div>
-      <AudioPlayer />
+      <AudioPlayer/>
     </div>
   );
 };

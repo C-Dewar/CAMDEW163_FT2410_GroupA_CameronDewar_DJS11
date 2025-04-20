@@ -1,45 +1,16 @@
-import React, { useState } from 'react';
-import { useFavouritesStore } from '@store/useFavouritesStore';
-// import { useNavigate } from 'react-router-dom';
+import React, {useState} from 'react';
+import {useFavouritesStore} from '@store/useFavouritesStore';
+import {useNavigate} from 'react-router-dom';
+import {sortFavourite} from '@/utils/sorting';
 
 const Favourites: React.FC = () => {
-  const { favourites, removeFromFavourites } = useFavouritesStore();
+  const {favourites, removeFromFavourites} = useFavouritesStore();
+  const navigate = useNavigate();
   const [sortOrder, setSortOrder] = useState<string>('A-Z');
+  const sortedFavourites = sortFavourite(favourites, sortOrder);
 
-  const sortedFavourites = () => {
-    const sorted = [...favourites];
-    if (!Array.isArray(sorted)) {
-      console.error('Favourites is not an array:', sorted);
-      return [];
-    }
-    switch (sortOrder) {
-      case 'A-Z':
-        sorted.sort((a, b) => a.title.localeCompare(b.title));
-        break;
-      case 'Z-A':
-        sorted.sort((a, b) => b.title.localeCompare(a.title));
-        break;
-      case 'Recently Added':
-        sorted.sort(
-          (a, b) =>
-            new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime()
-        );
-        break;
-      case 'Oldest':
-        sorted.sort(
-          (a, b) =>
-            new Date(a.addedAt).getTime() - new Date(b.addedAt).getTime()
-        );
-        break;
-      default:
-        break;
-    }
-    return sorted;
-  };
-  // const navigate = useNavigate();
-
-  // Group episodes by Show
-  const groupedFavourites = sortedFavourites().reduce((grouped, episode) => {
+  // Group episodes by show
+  const groupedFavourites = sortedFavourites.reduce((grouped, episode) => {
     if (!grouped[episode.showId]) {
       grouped[episode.showId] = {
         showTitle: episode.showTitle,
@@ -51,11 +22,10 @@ const Favourites: React.FC = () => {
   }, {} as Record<string, { showTitle: string; episodes: typeof favourites }>);
 
   return (
-    <div style={{ padding: 24, backgroundColor: '#242424', color: '#ffffff' }}>
-      {/* <button onClick={() => navigate(-1)}>&larr; Back</button> */}
+    <div style={{padding: 24, backgroundColor: '#242424', color: '#ffffff'}}>
+      <button onClick={() => navigate(-1)}>&larr; Back</button>
       <h1>Favourites</h1>
-      {/* Sort Options */}
-      <div style={{ marginBottom: 16 }}>
+      <div style={{marginBottom: 16}}>
         <select
           value={sortOrder}
           onChange={(e) => setSortOrder(e.target.value)}
@@ -70,10 +40,10 @@ const Favourites: React.FC = () => {
         <p>No favourites added yet.</p>
       ) : (
         Object.entries(groupedFavourites).map(
-          ([showId, { showTitle, episodes }]) => (
-            <div key={showId} style={{ marginBottom: 24 }}>
-              <h2 style={{ color: '#FFD700' }}>{showTitle}</h2>
-              <ul style={{ listStyle: 'none', padding: 0 }}>
+          ([showId, {showTitle, episodes}]) => (
+            <div key={showId} style={{marginBottom: 24}}>
+              <h2 style={{color: '#FFD700'}}>{showTitle}</h2>
+              <ul style={{listStyle: 'none', padding: 0}}>
                 {episodes.map((episode) => (
                   <li
                     key={episode.episodeId}
@@ -84,10 +54,10 @@ const Favourites: React.FC = () => {
                       borderRadius: '4px',
                     }}
                   >
-                    <p style={{ margin: 0, fontWeight: 'bold' }}>
+                    <p style={{margin: 0, fontWeight: 'bold'}}>
                       {episode.title}
                     </p>
-                    <p style={{ fontSize: '0.9em', color: '#AAA' }}>
+                    <p style={{fontSize: '0.9em', color: '#AAA'}}>
                       {episode.description}
                     </p>
                     <button

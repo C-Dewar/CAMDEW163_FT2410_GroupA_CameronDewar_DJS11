@@ -16,6 +16,18 @@ function NavigationBar() {
     setIsMenuOpen(false); // Close the menu when the location changes
   }, [location]);
 
+  //Reset localStorage function within burger menu
+  const resetLocalStorage = () => {
+    const confirmed = window.confirm(
+      'are you sure you want to reset all user data?'
+    );
+    if (confirmed) {
+      localStorage.clear(); // Clear all local storage data
+      alert('All user data has been reset!'); // User feedback - data reset
+      window.location.reload(); // Reload the page to reflect changes
+    }
+  };
+
   return (
     <nav className="navbar">
       <div
@@ -37,9 +49,13 @@ function NavigationBar() {
               <Link to="/favourites">Favourites</Link>
             </li>
           )}
+          <li>
+            <button onClick={resetLocalStorage}>Reset ALL User Data</button>
+          </li>
         </ul>
       </div>
     </nav>
   );
 }
+
 export default NavigationBar;

@@ -1,32 +1,21 @@
 import { create } from 'zustand';
+import {Favourite} from "@/types/favourite";
 
 // Utility function to get the favourites from localStorage
-const getFavouritesFromLocalStorage = (): FavouriteEpisode[] => {
+const getFavouritesFromLocalStorage = (): Favourite[] => {
   const storedFavourites = localStorage.getItem('favourites');
   return storedFavourites ? JSON.parse(storedFavourites) : [];
 };
 
 // Utility function to save the favourites to localStorage
-const saveFavouritesToLocalStorage = (favourites: FavouriteEpisode[]) => {
+const saveFavouritesToLocalStorage = (favourites: Favourite[]) => {
   localStorage.setItem('favourites', JSON.stringify(favourites));
 };
 
-// Define the type of favourite episode
-interface FavouriteEpisode {
-  uniqueId: string; // Use a composite key to make sure episode is unique across shows and seasons: `${showId}-${seasonId}-${episodeId}`
-  episodeId: number;
-  title: string;
-  description: string;
-  file: string;
-  showId: number;
-  showTitle: string;
-  addedAt: number;
-}
-
 // Define the state of the favourites store
 interface FavouritesState {
-  favourites: FavouriteEpisode[];
-  addToFavourites: (episode: FavouriteEpisode) => void;
+  favourites: Favourite[];
+  addToFavourites: (episode: Favourite) => void;
   removeFromFavourites: (uniqueId: string) => void;
   loadFavourites: () => void;
 }

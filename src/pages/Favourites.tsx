@@ -78,6 +78,9 @@ const Favourites: React.FC = () => {
                     <p className={styles.episodeDescription}>
                       {episode.description}
                     </p>
+                    <p className={styles.episodeAddedAt}>
+                      Added on: {new Date(episode.addedAt).toLocaleString()}
+                    </p>
                     <button
                       onClick={() => removeFromFavourites(episode.uniqueId)}
                       className={styles.removeButton}

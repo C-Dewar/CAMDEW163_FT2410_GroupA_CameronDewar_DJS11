@@ -1,0 +1,50 @@
+/* favourites.module.css */
+
+.container {
+  width: 100vw; /* Full viewport width */
+  padding: 24px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  box-sizing: border-box; /* Include padding in width calculation */
+  margin: 0; /* Remove default margins */
+}
+
+.sortOptions {
+  margin-bottom: 16px;
+}
+
+.showTitle {
+  color: #ffd700;
+}
+
+.episodeList {
+  list-style: none;
+  padding: 0;
+}
+
+.episodeItem {
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background-color: #333333;
+  border-radius: 4px;
+}
+
+.episodeTitle {
+  margin: 0;
+  font-weight: bold;
+}
+
+.episodeDescription {
+  font-size: 0.9em;
+  color: #aaa;
+}
+
+.removeButton {
+  padding: 6px 12px;
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 8px;
+}

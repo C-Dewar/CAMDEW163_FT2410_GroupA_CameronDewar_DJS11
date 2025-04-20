@@ -1,0 +1,27 @@
+.container {
+  padding: 24px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+.title {
+  margin-bottom: 24px;
+}
+
+.selectContainer {
+  margin-bottom: 20px;
+}
+
+.cardContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background-color: #333333;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

@@ -1,0 +1,89 @@
+/* ShowDetails.module.css */
+
+.container {
+  padding: 24px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.backButton {
+  margin-bottom: 16px;
+}
+
+.heading {
+  font-size: 2rem;
+}
+
+.seasonsButton {
+  margin-left: 12px;
+}
+
+.seasonImage {
+  width: 100%;
+  max-width: 450px;
+  max-height: 450px;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  margin: 0 auto;
+  display: block;
+}
+
+.episodeList {
+  padding: 0;
+  list-style: none;
+}
+
+.episodeItem {
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  background-color: rgba(51, 51, 51, 0.8);
+  border-radius: 4px;
+}
+
+.episodeTitle {
+  margin: 0;
+  font-weight: bold;
+}
+
+.episodeFinished {
+  color: green;
+}
+
+.episodeControls {
+  margin-top: 8px;
+}
+
+.playButton {
+  padding: 6px 12px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.favouriteButton {
+  padding: 6px 12px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.favouriteButtonActive {
+  background-color: #ff6347;
+}
+
+.favouriteButtonInactive {
+  background-color: #ffd700;
+}
+
+.progressText {
+  margin-top: 4px;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.listenCount {
+  margin-top: 4px;
+}

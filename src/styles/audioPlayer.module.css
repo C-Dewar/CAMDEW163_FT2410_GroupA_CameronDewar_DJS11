@@ -3,13 +3,12 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgb(60, 60, 60); /* White background for contrast */
+  background-color: transparent; /* White background for contrast */
   padding: 12px 16px;
   border-top: 1px solid rgba(61, 61, 61, 0.42); /* Adds a subtle border to separate it */
   box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for some depth */
   z-index: 9999; /* Ensures it stays on top of other content */
 }
-
 
 .audioPlayerTitleWrapper {
   display: flex;
@@ -39,12 +38,10 @@
   text-align: center;
 }
 
-/* Optional: If you want to add a smooth transition when the player appears/disappears */
 .audioPlayerWrapper {
   transition: transform 0.3s ease-in-out;
 }
 
-/* If you have other content that may be pushed up by this player */
 body {
   padding-bottom: 60px; /* Adds extra space at the bottom to prevent overlap */
 }

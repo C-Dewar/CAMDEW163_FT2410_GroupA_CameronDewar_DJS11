@@ -1,54 +1,55 @@
-# React + TypeScript + Vite
+My Podcast Application: CAMDEW163_FT2410_GroupA_CameronDewar_DJS11
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+For my podcast application, I've made use of the following dependencies:
+I Created my application through the use of React + Vite and have done the vast majority of my code using a combination of Typescript,
+JavaScript, and css modules for styling. I have some innate react features and imported some additional elements like zustand for state management and date-fns for date management to prevent the need for complex javascript logic for date handling - even though I've kept the display of the date relatively rudimentary/short to reduce clutter and unnecessary specificity.
 
-Currently, two official plugins are available:
+My dependencies list is therefore as follows:
+React,
+React-router-dom,
+Vite,
+Zustand,
+date-fns.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+I made use of absolute references by modifying my tsconfig.app.json to ensure that I use as few local references as possible for practicality.
 
-## Expanding the ESLint configuration
+In terms of the applications functionality,
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- The application defaults to loading on a "Home" page which is path "/" and contains a list of all of the shows returned by the API call
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+The user is able to sort the shows on both my Home and Favourites (Provided episodes within favourites exist) via the sorting util hook:
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The sorting hook allows the user to sort:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- from A-Z (default), (Z-A) - Uses alphabetical sorting within a switch statement i.e. toLocaleCompare
+- or by Recent updates and Oldest updates which gets the date and makes use of
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+The Filtering hook is only utilised within the Home page:
+
+- it sorts the shows by genre based off a map of the provided genres compared to the numerical value for genre which is contained within the
+  genre key of the shows object returned by that initial API call.
+
+  ShowDetails:
+
+- Once a show is clicked, the Seasons and Episodes corresponding to that ShowId are loaded on the ShowDetails page/render. The user is capable
+  of navigating through the available episodes by clicking the desired season which shows the contained episodes and then they can mount the selected episode to and launch the audioplayer to play that specific episode.
+- Progress is tracked and displayed on that page, whether or not the episode has been finished is tracked, and a play/listen count is also
+  tracked and updated/incremented by +1 whenever an episode has been completely listened to. The isFinished functionality resets the episode back to the start (0) and the isFinished status resets after the listen count has been incremented by 1, thereby allowing the user to listen to a track multiple times and use the Listen count as a reference if they are listening to it again.
+
+  Favourites:
+
+- The user can also add that episode to favourites which then creates a shallow copy of that episode and ammends it to the favourites array
+  using a unique composite id for the specific episode.
+- I implemented a burger menu that allows for navigation between the home and favourites page depending on which page is currently displayed.
+  The episode can be either added or removed from the ShowDetails page, but can only be removed via the Favourites page.
+  The favourite episodes are stored to localStorage so that they remain within the user data.
+- The user can either remove the show individually from the favourites page or they can clear all local storage from the burger menu dropdown
+  to toally reset any user specific interaction/tracking stored within the application.
+
+  Burger Menu css from:
+
+  - raw css & javaScript credit: https://codepen.io/joesayegh/pen/jOEVPKO
+
+  Background image from:
+
+  - pexels-elijahsad

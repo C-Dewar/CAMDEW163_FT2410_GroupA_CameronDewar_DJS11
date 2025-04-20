@@ -23,6 +23,10 @@ a:hover {
 }
 
 body {
+  background-image: url('/images/background-image.jpg'); /* Reference the image in the public folder */
+  background-size: cover; /* Ensures the image covers the entire viewport */
+  background-position: center center; /* Centers the image */
+  background-attachment: fixed; /* Keeps the background fixed during scrolling */
   margin: 0;
   display: flex;
   place-items: center;

@@ -1,0 +1,26 @@
+.cardLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.card {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: white;
+}
+
+.card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+.card p {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.card p strong {
+  font-weight: bold;
+}

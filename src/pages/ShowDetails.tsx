@@ -1,15 +1,16 @@
-import {useEffect, useState} from 'react';
-import {useParams, useNavigate} from 'react-router-dom';
-import {useAudioStore} from '@store/useAudioStore';
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAudioStore } from '@store/useAudioStore';
 import AudioPlayer from '@components/AudioPlayer/AudioPlayer';
-import {useFavouritesStore} from '@store/useFavouritesStore';
-import {Show} from "@/types/show";
-import {Episode} from "@/types/episode";
-import {Season} from "@/types/season";
-import {fetchShowDetails} from "@/APIFunctions/api.tsx";
+import { useFavouritesStore } from '@store/useFavouritesStore';
+import { Show } from '@/types/show';
+import { Episode } from '@/types/episode';
+import { Season } from '@/types/season';
+import { fetchShowDetails } from '@/APIFunctions/api.tsx';
+import styles from '@styles/ShowDetails.module.css'; // Import the CSS module
 
 const ShowDetails = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [show, setShow] = useState<Show | null>(null);
   const [loading, setLoading] = useState(true);
@@ -21,15 +22,12 @@ const ShowDetails = () => {
     episodeProgress,
     episodeListenCount,
     audioRef,
-    setIsPlaying
+    setIsPlaying,
   } = useAudioStore();
 
   // Get addToFavourites from the store
-  const {
-    addToFavourites,
-    removeFromFavourites,
-    favourites
-  } = useFavouritesStore(); // Access the store
+  const { addToFavourites, removeFromFavourites, favourites } =
+    useFavouritesStore(); // Access the store
 
   useEffect(() => {
     const fetchData = async () => {
@@ -113,23 +111,29 @@ const ShowDetails = () => {
     return show.id + '-' + season.season + '-' + episode.episode;
   };
 
-  if (loading) return <div style={{padding: 24}}>Loading show...</div>;
+  if (loading) return <div className={styles.container}>Loading show...</div>;
 
   if (!show) {
-    return <div style={{padding: 24}}>Failed to load show details.</div>;
+    return <div className={styles.container}>Failed to load show details.</div>;
   }
 
   if (!show.seasons || show.seasons.length === 0) {
-    return <div style={{padding: 24}}>No seasons available for this show.</div>;
+    return (
+      <div className={styles.container}>
+        No seasons available for this show.
+      </div>
+    );
   }
 
   const episodes = show.seasons[selectedSeason]?.episodes || [];
 
   return (
-    <div style={{padding: 24}}>
-      <button onClick={() => navigate(-1)}>&larr; Back</button>
+    <div className={styles.container}>
+      <button onClick={() => navigate(-1)} className={styles.backButton}>
+        &larr; Back
+      </button>
 
-      <h1> {show.title}</h1>
+      <h1 className={styles.heading}>{show.title}</h1>
       <p>{show.description}</p>
 
       <h2>Seasons</h2>
@@ -138,9 +142,7 @@ const ShowDetails = () => {
           <button
             key={season.season}
             onClick={() => setSelectedSeason(index)}
-            style={{
-              marginLeft: index > 0 ? 12 : 0,
-            }}
+            className={styles.seasonsButton}
           >
             {season.title}
           </button>
@@ -151,44 +153,26 @@ const ShowDetails = () => {
         <img
           src={show.seasons[selectedSeason].image}
           alt={show.seasons[selectedSeason].title}
-          style={{
-            width: '150px',
-            height: '150px',
-          }}
+          className={styles.seasonImage}
         />
         <p>
           <strong>Episodes:</strong>{' '}
           {show.seasons[selectedSeason].episodes.length}
         </p>
 
-        <ul style={{padding: 0, listStyle: 'none'}}>
+        <ul className={styles.episodeList}>
           {episodes.map((episode) => (
-            <li
-              key={episode.episode}
-              style={{
-                padding: '8px 12px',
-                marginBottom: '8px',
-                backgroundColor: '#333333',
-                borderRadius: '4px',
-              }}
-            >
-              <p style={{margin: 0, fontWeight: 'bold'}}>
+            <li key={episode.episode} className={styles.episodeItem}>
+              <p className={styles.episodeTitle}>
                 {episode.title}
                 {episodeProgress[episode.episode]?.isFinished && (
-                  <span style={{color: 'green'}}> - Finished</span>
+                  <span className={styles.episodeFinished}> - Finished</span>
                 )}
               </p>
-              <div style={{marginTop: '8px'}}>
+              <div className={styles.episodeControls}>
                 <button
                   onClick={() => handleEpisodeClick(episode)}
-                  style={{
-                    padding: '6px 12px',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                    marginRight: '8px',
-                  }}
+                  className={styles.playButton}
                 >
                   Play
                 </button>
@@ -200,18 +184,13 @@ const ShowDetails = () => {
                       episode
                     )
                   }
-                  style={{
-                    padding: '6px 12px',
-                    color: 'white',
-                    backgroundColor: isFavourite(
+                  className={`${styles.favouriteButton} ${
+                    isFavourite(
                       getUniqueId(show, show.seasons[selectedSeason], episode)
                     )
-                      ? '#FF6347' // Disabled button background
-                      : '#FFD700', // Active button background
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer',
-                  }}
+                      ? styles.favouriteButtonActive
+                      : styles.favouriteButtonInactive
+                  }`}
                 >
                   {isFavourite(
                     getUniqueId(show, show.seasons[selectedSeason], episode)
@@ -219,29 +198,24 @@ const ShowDetails = () => {
                     ? 'Remove from Favourites'
                     : 'Add to Favourites'}
                 </button>
-                <p
-                  style={{
-                    marginTop: '4px',
-                    fontSize: '0.9em',
-                    color: '#555',
-                  }}
-                >
+                <p className={styles.progressText}>
                   Progress:{' '}
                   {Math.floor(episodeProgress[episode.episode]?.progress || 0)}s
                 </p>
-                <p>
-                  {' '}
+                <p className={styles.listenCount}>
                   Listen Count:{' '}
                   {episodeListenCount[episode.episode]?.listenCount > 0
-                    ? `${episodeListenCount[episode.episode]?.listenCount} times`
-                    : 0}{' '}
+                    ? `${
+                        episodeListenCount[episode.episode]?.listenCount
+                      } times`
+                    : 0}
                 </p>
               </div>
             </li>
           ))}
         </ul>
       </div>
-      <AudioPlayer/>
+      <AudioPlayer />
     </div>
   );
 };
